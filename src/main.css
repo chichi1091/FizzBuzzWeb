@@ -22,3 +22,19 @@ table,th,td {
   border: solid 1px #000000;
   border-collapse: collapse;
 }
+
+td {
+  width: 50px;
+}
+
+.FizzBuzz {
+  background-color: antiquewhite;
+}
+
+.Fizz {
+  background-color: aqua;
+}
+
+.Buzz {
+  background-color: aquamarine;
+}

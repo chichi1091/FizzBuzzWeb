@@ -1,10 +1,11 @@
 module Main exposing (..)
 
 import Html exposing (Html, text, div, input, table, thead, tbody, tr, th, td)
-import Html.Attributes exposing (value)
+import Html.Attributes exposing (value, class)
 import Html.Events exposing (onInput, onClick)
 
 ---- MODEL ----
+initial : Int
 initial = 100
 type alias Model =
     {
@@ -62,7 +63,7 @@ view model =
                         toString x
 
                 tagList y =
-                    List.map (\x -> td[] [text (judgment (y + x))])
+                    List.map (\x -> td[class <| (judgment (y + x))] [text (judgment (y + x))])
                     <| List.range 1 10
                 
             in
@@ -72,10 +73,10 @@ view model =
         table2tag =
             table[]
                 [
-                   thead[][
-                       tr[] <| List.map th2List <| List.range 1 model.widthVal
-                   ] 
-                   , tbody[]
+                --    thead[][
+                --        tr[] <| List.map th2List <| List.range 1 model.widthVal
+                --    ] 
+                   tbody[]
                        td2tagList
                 ]
 
