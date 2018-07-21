@@ -1,7 +1,7 @@
 module Main exposing (..)
 
-import Html exposing (Html, text, div, input, table, thead, tbody, tr, th, td)
-import Html.Attributes exposing (value, class)
+import Html exposing (Html, text, div, input, table, thead, tbody, tr, th, td, select, option)
+import Html.Attributes exposing (value, class, selected)
 import Html.Events exposing (onInput, onClick)
 
 ---- MODEL ----
@@ -12,6 +12,8 @@ type alias Model =
         maxVal : Int
         , widthVal : Int
         , heightVal : Int
+        , fizzVal : Int
+        , buzzVal : Int
     }
 
 init : ( Model, Cmd Msg )
@@ -20,6 +22,8 @@ init =
     maxVal = initial
     , widthVal = 10
     , heightVal = (initial // 10) - 1
+    , fizzVal = 3
+    , buzzVal = 5
     }
     , Cmd.none )
 
@@ -28,6 +32,8 @@ init =
 ---- UPDATE ----
 type Msg
     = InputMax String
+    | InputFizz String
+    | InputBuzz String
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -38,12 +44,20 @@ update msg model =
                 newHeight = (newMax // 10) - 1
             in
                 ({ model | maxVal = newMax, heightVal = newHeight}, Cmd.none)
+        InputFizz val ->
+            let
+                newVal = (Result.withDefault 1 (String.toInt val))
+            in
+                ({ model | fizzVal = newVal}, Cmd.none)
+        InputBuzz val ->
+            let
+                newVal = (Result.withDefault 1 (String.toInt val))
+            in
+                ({ model | buzzVal = newVal}, Cmd.none)
 
 
 
 ---- VIEW ----
-
-
 view : Model -> Html Msg
 view model =
     let
@@ -53,11 +67,11 @@ view model =
         td2tagList =
             let
                 judgment x =
-                    if (x % 3) == 0 && (x % 5) == 0 then
+                    if (x % model.fizzVal) == 0 && (x % model.buzzVal) == 0 then
                         "FizzBuzz"
-                    else if (x % 3) == 0 then
+                    else if (x % model.fizzVal) == 0 then
                         "Fizz"
-                    else if (x % 5) == 0 then
+                    else if (x % model.buzzVal) == 0 then
                         "Buzz"
                     else
                         toString x
@@ -85,6 +99,30 @@ view model =
             [  
                 text "1 ー "
                 , input [value (toString model.maxVal) ,onInput InputMax][]
+                , text "Fizz:"
+                , select [onInput InputFizz]
+                    <| List.map (\x ->
+                        let
+                            select x =
+                                if x == model.fizzVal then
+                                    True
+                                else
+                                    False
+                        in
+                            option[value (toString x), selected (select x)][text (toString x)])
+                        <| List.range 1 9
+                , text "Buzz:"
+                , select [onInput InputBuzz]
+                    <| List.map (\x ->
+                        let
+                            select x =
+                                if x == model.buzzVal then
+                                    True
+                                else
+                                    False
+                        in
+                            option[value (toString x), selected (select x)][text (toString x)])
+                        <| List.range 1 9
                 , table2tag
             ]
 
