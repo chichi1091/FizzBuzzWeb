@@ -2,7 +2,9 @@ module Main exposing (..)
 
 import Html exposing (Html, text, div, input, table, thead, tbody, tr, th, td, select, option)
 import Html.Attributes exposing (value, class, selected)
-import Html.Events exposing (onInput, onClick)
+import Html.Events exposing (onInput)
+import Html.Events exposing (..)
+import Json.Decode as Json
 
 
 ---- MODEL ----
@@ -113,7 +115,7 @@ view model =
             [ text "1 ー "
             , input [ value (toString model.maxVal), onInput InputMax ] []
             , text "Fizz:"
-            , select [ onInput InputFizz ] <|
+            , select [ onChange InputFizz ] <|
                 List.map
                     (\x ->
                         let
@@ -125,7 +127,7 @@ view model =
                 <|
                     List.range 1 9
             , text "Buzz:"
-            , select [ onInput InputBuzz ] <|
+            , select [ onChange InputBuzz ] <|
                 List.map
                     (\x ->
                         let
@@ -138,6 +140,11 @@ view model =
                     List.range 1 9
             , table2tag
             ]
+
+
+onChange : (String -> value) -> Html.Attribute value
+onChange tagger =
+    on "change" (Json.map tagger targetValue)
 
 
 
